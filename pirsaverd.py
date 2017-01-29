@@ -34,7 +34,8 @@ class Logger(object):
         self.remote = remote
 
     def log(self, txt):
-        print(txt)
+        print(txt, flush=True)
+
         if not self.remote:
             return
 

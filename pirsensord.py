@@ -9,10 +9,6 @@ PIR_PIN = 7
 GPIO.setup(PIR_PIN, GPIO.IN)
 
 
-def out(x):
-    print(x, flush=True)
-
-
 def log(x):
     print(x, file=sys.stderr, flush=True)
 
@@ -21,7 +17,7 @@ def signal_motion(remote):
     context = zmq.Context()
     socket = context.socket(zmq.PUSH)
     socket.connect(remote)
-    socket.send_json({'txt':'ohai'})
+    socket.send_json({'txt': 'ohai'})
     socket.close()
 
 
@@ -39,6 +35,7 @@ def main(remotes):
     except:
         log(' quit')
         GPIO.cleanup()
+
 
 if __name__ == '__main__':
     remotes = sys.argv[1:]
