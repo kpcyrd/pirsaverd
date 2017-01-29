@@ -1,0 +1,10 @@
+[Unit]
+Description=pirsaverd: server
+
+[Service]
+Type=simple
+User=alarm
+ExecStart=/home/alarm/pirsaverd/pirsaverd.py -d :0 tcp://127.0.0.1:5733 --ttl 180
+
+[Install]
+WantedBy=multi-user.target

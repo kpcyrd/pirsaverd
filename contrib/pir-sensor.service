@@ -1,0 +1,9 @@
+[Unit]
+Description=pirsaverd: sensor
+
+[Service]
+Type=simple
+ExecStart=/home/alarm/pirsaverd/pirsensord.py tcp://127.0.0.1:5733
+
+[Install]
+WantedBy=multi-user.target
