@@ -23,7 +23,10 @@ class Screen(object):
 
     def run(self, cmd):
         env = dict(os.environ, DISPLAY=self.display)
-        subprocess.check_call(cmd, env=env)
+        try:
+            subprocess.check_call(cmd, env=env)
+        except subprocess.CalledProcessError:
+            pass
 
 
 class Logger(object):
