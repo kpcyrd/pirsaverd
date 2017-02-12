@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import subprocess
+import time
 import zmq
 import sys
 import os
@@ -62,6 +63,10 @@ def server(addr, ttl):
         yield [sock.recv() for sock, _ in evts]
 
 
+def now():
+    return int(time.time())
+
+
 def main(args):
     screen = Screen(args.display, args.dry)
     logger = Logger(args.log)
@@ -69,9 +74,14 @@ def main(args):
     is_on = True
     screen.turnon()
 
+    last_msg = 0
+
     for evts in server(args.bind, args.ttl):
         if evts:
+            if last_msg + args.cooldown > now():
+                continue
             screen.turnon()
+            last_msg = now()
             if not is_on:
                 logger.log('screen on')
             is_on = True
@@ -89,6 +99,7 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--ttl', type=int, default=60, help='shutdown screen after X seconds of silence')
     parser.add_argument('-l', '--log', help='zmq socket for logging')
     parser.add_argument('-d', '--display', default=':0', help='control display (default :0)')
+    parser.add_argument('-c', '--cooldown', type=int, default=0, help='minimum delay between messages')
     args = parser.parse_args()
 
     main(args)
