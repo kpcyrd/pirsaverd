@@ -66,6 +66,10 @@ def main(args):
     screen = Screen(args.display, args.dry)
     logger = Logger(args.log)
 
+    logger.log('screensaver started')
+    if logger.remote:
+        logger.log('remote logging: %r' % logger.remote)
+
     is_on = True
     screen.turnon()
 
