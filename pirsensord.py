@@ -13,15 +13,19 @@ def log(x):
     print(x, file=sys.stderr, flush=True)
 
 
-def signal_motion(remote):
-    context = zmq.Context()
-    socket = context.socket(zmq.PUSH)
-    socket.connect(remote)
-    socket.send_json({'txt': 'ohai'})
-    socket.close()
+class Remote(object):
+    def __init__(self, addr):
+        self.context = zmq.Context()
+        self.socket = self.context.socket(zmq.PUSH)
+        self.socket.connect(addr)
+
+    def notify(self):
+        self.socket.send_json({'txt': 'ohai'})
 
 
 def main(remotes):
+    remotes = [Remote(x) for x in remotes]
+
     log('PIR Module test (^C to exit)')
     time.sleep(2)
     log('ready')
@@ -30,7 +34,7 @@ def main(remotes):
         while True:
             if GPIO.input(PIR_PIN):
                 for remote in remotes:
-                    signal_motion(remote)
+                    remote.notify()
             time.sleep(1)
     except:
         log(' quit')
